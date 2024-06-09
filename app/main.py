@@ -65,7 +65,6 @@ def _get_model_extra_info(name=""):
          "image_generation": {
                 "model": "dall-e-3"
          },
-        "vision": {}
       },
     """
     ext = {
@@ -92,7 +91,6 @@ def _get_model_extra_info(name=""):
             "image_generation": {
                 "model": "dall-e-3",
             },
-            "vision": {},
         }
     return ext
 
@@ -309,7 +307,7 @@ class OpenAIChatBot(ChatBotAbc):
             yield chunk.choices[0], None
 
     def get_models(self):
-        default_models = _get_default_model_dict("openai-gpt-3.5-turbo")
+        default_models = _get_default_model_dict("openai-gpt-4o")
         models = [
             {
                 "id": "openai-gpt-3.5-turbo",
@@ -596,7 +594,12 @@ async def proxy_models(request: Request):
     content = response.content
     if response.status_code == 200:
         data = json.loads(content)
-        data.update({"default_models": DEFAULT_MODELS, "models": MODELS_AVAILABLE})
+        data.update(
+            {
+                "default_models": DEFAULT_MODELS,
+                "models": MODELS_AVAILABLE,
+            }
+        )
         content = json_dumps(data, ensure_ascii=False).encode("utf-8")
     return Response(
         status_code=response.status_code,
